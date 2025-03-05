@@ -1,0 +1,112 @@
+<% layout('boilerplate/boilerplate') %>
+
+    <main id="dash-main">
+        <div class="shutter-panel">
+            <h1><%= roomName %></h1>
+            <div class="room-setting">
+                <i class="fa-solid fa-gear" id="setting_icon"></i>
+            </div>
+        </div>
+        <div class="add_room_form add_type_form" id="add_type_form">
+            <div class="setting-container">
+                <form id="multiStepForm" class="multiStepForm" action="/listings/<%= roomName %>/create" method="post">
+                    <h1>Add Devices</h1>
+                    <div id="step1">
+                        <select class="glow-input" name="deviceType" id="deviceType" required>
+                            <option value="">-- Select --</option>
+                            <option name="deviceType" value="on_off_switch">On-Off Switch</option>
+                            <option name="deviceType" value="fan_switch">Fan Switch</option>
+                            <option name="deviceType" value="others">Others</option>
+                        </select>
+                        <button type="button" onclick="nextStep()">Next</button>
+                    </div>
+                
+                    <!-- Step 2: Enter Name -->
+                    <div id="step2" style="display: none;">
+                        <input type="hidden" name="selectedType" id="selectedType">
+                        
+                        <label for="deviceName">Enter Name:</label>
+                        <input type="text" name="deviceName" id="deviceName" placeholder="Enter name" required>
+                
+                        <div>
+                            <button type="button" onclick="prevStep()">Back</button>
+                            <button type="submit">Submit</button>
+                        </div>
+                    </div>
+                </form>    
+            </div>
+            <div class="setting-container">
+                <span>
+                    <h1>Edit Room</h1>
+                    <form action="/listings/<%= selectedRoom._id %>/edit?_method=put" method="post">
+                        <input name="roomName" id="room_name" type="text">
+                        <button type="submit" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i> Edit </button>
+                    </form>
+                </span>    
+                <form action="/listings/<%= selectedRoom._id %>/delete?_method=DELETE" method="post">
+                    <button type="submit" class="delete-btn" > <i class="fa-solid fa-trash"></i> Delete</button>
+                </form>
+            </div>
+        </div> 
+        <div class="card-grid">
+            <% for (const device of devices) { %>
+                <div>
+                    <div class="card">
+                        <span class="head-card">
+                            <p class="card-title">
+                                <% if (device.deviceType === 'fan_switch') { %>
+                                    <i class="fa-solid fa-fan fans"></i>
+                                <% } else if (device.deviceType === 'on_off_switch') { %>
+                                    <i class='bx bx-bulb fans'></i>
+                                <% } else { %>
+                                    <i class='bx bx-bulb fans'></i>
+                                <% } %>
+                                <%= device.deviceName %>
+                            </p>
+                            <i class='bx bx-dots-vertical-rounded menu-toggle' data-id="<%= device._id %>"></i>
+                        </span>
+                        <div class="menu add_room_form" id="menu-<%= device._id %>">
+                            <form action="/listings/<%= roomName %>/<%= selectedRoom._id %>/buttons/<%= device._id %>/edit?_method=PUT" method="post">
+                                <input type="text" name="deviceName" value="<%= device.deviceName %>">
+                                <button type="submit" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i> Save</button>
+                            </form>
+                            <form action="/listings/<%= roomName %>/<%= selectedRoom._id %>/buttons/<%= device._id %>/delete?_method=DELETE" method="post">
+                                <button type="submit" class="delete-btn"> <i class="fa-solid fa-trash"></i> delete</button>
+                            </form>
+                        </div>
+            
+                        <span>
+                            <form action="/listings/<%= roomName %>/<%= device._id %>/<%= device.deviceType %>/<%= device.deviceName %>" method="post">
+                                <input type="hidden" name="status" value="on">
+                                <button type="submit" class="button-on">ON</button>
+                            </form>
+                            <form action="/listings/<%= roomName %>/<%= device._id %>/<%= device.deviceType %>/<%= device.deviceName %>" method="post">
+                                <input type="hidden" name="status" value="off">
+                                <button type="submit" class="button-off">OFF</button>
+                            </form>
+                        </span>
+            
+                        <div class="contain">
+                            <% if (device.deviceType === 'fan_switch') { %>
+                                <i class="fa-solid fa-fan fans indicator"></i>
+                            <% } else { %>
+                                <i class='bx bx-bulb fans indicator'></i>
+                            <% } %>
+                            <span class="span-data">
+                                <p class="state">State:<span>N/A</span></p>
+                                <p class="state">State:<span><%= device.status %></span></p>        
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </main>
+    <main class="add_room_form" id="add_room_form">
+        <h1>Creat Room</h1>
+        <form action="/listings/add-credentials" method="post">
+            <input type="text" required name="room_name" placeholder="Enter Room Name">
+            <button type="submit">Create</button>
+        </form>
+    </main>        
+

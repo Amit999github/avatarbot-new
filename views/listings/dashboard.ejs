@@ -1,0 +1,73 @@
+<% layout('boilerplate/boilerplate') %>
+<main id="dash-main">
+    <h1>Dashboard</h1>
+    <!------------------------------------------ Insights --------------------------->
+    <ul class="insights">
+        <li>
+            <i class='fa-solid fa-droplet'></i>
+            <span class="info">
+                <h3><span id="humi"></span> %</h3>
+                <p>Humidity</p>
+            </span>
+        </li>
+        <li><i class='fa-solid fa-temperature-high'></i>
+            <span class="info">
+                <h3><span id="temp"></span> <sup>o</sup>C</h3>
+                <p>Temperature</p>
+            </span>
+        </li>
+        <li><i class="fa-solid fa-bolt"></i>
+            <span class="info">
+                <h3><span id="curr"></span> A</h3>
+                <p>Current</p>
+            </span>
+        </li>
+        <li><i class='fa-solid fa-bolt'></i>
+            <span class="info">
+                <h3><span id="volt"></span> V</h3>
+                <p>voltage</p>
+            </span>
+        </li>
+        <li><i class="fa-solid fa-arrows-spin"></i>
+            <span class="info">
+                <h3><span id="totalcusm"></span> A</h3>
+                <p>Total Consumption</p>
+            </span>
+        </li>
+    </ul>
+    <!--------------------------------------- End of Insights --------------------------------->
+
+    <div class="bottom-data">
+        <div class="orders">
+            <div class="header">
+                <i class='bx bx-receipt'></i>
+                <h3>Recent Orders</h3>
+                <i class='bx bx-filter'></i>
+                <i class='bx bx-search'></i>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <!-------------------------------------  End of Reminders----------------------------------->
+   
+    <!---------------------------------------- Chart initialization ------------------------------------->
+     <h1>Total Consumption</h1>
+    <div class="chart">
+        <canvas id="myChart"></canvas>
+    </div>
+</main>      
+<main class="add_room_form" id="add_room_form">
+    <h1>Creat Room</h1>
+    <form action="/listings/add-credentials" method="post">
+        <input type="text" required name="room_name" placeholder="Enter Room Name">
+        <button type="submit">Create</button>
+    </form>
+</main>        
