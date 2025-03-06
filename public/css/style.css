@@ -891,8 +891,9 @@ background-color: var(--grey);
     transform: scale(0.98);
 }
 .setting_icon{
-    transform: rotate(-90deg);
+    transform: rotate(90deg);
     color: var(--danger) !important;
+    transition: transform 1s ease;
 }
 .setting-container{
     width: 350px;
