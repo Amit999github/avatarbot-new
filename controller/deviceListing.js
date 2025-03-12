@@ -7,7 +7,7 @@ const {auth ,db} = require('../firebaseConfig');
 // ============================================= device listings ==============================
 const deviceListings = wrapAsync(async (req, res) => {
     let { roomName } = req.params;
-    let { deviceType, deviceName } = req.body;
+    let { deviceType, deviceName , deviceId } = req.body;
     let rooms = await Room.find({ roomName: roomName });
 
     if (rooms.length === 0) {
@@ -19,6 +19,7 @@ const deviceListings = wrapAsync(async (req, res) => {
         let newDevice = new Device({
             deviceType,
             deviceName,
+            deviceId,
             roomId: room._id
         });
         await newDevice.save();
@@ -39,7 +40,7 @@ const buttonListings = wrapAsync(async (req, res) => {
     const Uid = req.cookies.user.toString().slice(-5);
     const status = req.body.status;
 
-    await db.ref(`users/${req.cookies.user}/StringIn`).set(`$${Uid},${room},${id},${deviceType},${deviceName},%C?${status}%`);
+    await db.ref(`users/${req.cookies.user}/StringIn`).set(`$${Uid},${room},${id},${deviceType},${deviceName},${status}%`);
 
     req.flash('success', 'Request sent successfully');
     res.redirect(`/listings/${roomName}`);

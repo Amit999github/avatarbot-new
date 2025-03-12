@@ -9,10 +9,10 @@
         </div>
         <div class="add_room_form add_type_form" id="add_type_form">
             <div class="setting-container">
-                <form id="multiStepForm" class="multiStepForm" action="/listings/<%= roomName %>/create" method="post">
+                <form id="multiStepForm" class="multiStepForm needs-validation" action="/listings/<%= roomName %>/create" method="post" novalidate >
                     <h1>Add Devices</h1>
                     <div id="step1">
-                        <select class="glow-input" name="deviceType" id="deviceType" required>
+                        <select class="glow-input form-control" name="deviceType" id="deviceType" required>
                             <option value="">-- Select --</option>
                             <option name="deviceType" value="on_off_switch">On-Off Switch</option>
                             <option name="deviceType" value="fan_switch">Fan Switch</option>
@@ -26,11 +26,12 @@
                         <input type="hidden" name="selectedType" id="selectedType">
                         
                         <label for="deviceName">Enter Name:</label>
-                        <input type="text" name="deviceName" id="deviceName" placeholder="Enter name" required>
-                
+                        <input type="text" name="deviceName" id="deviceName" class="form-control" placeholder="Enter name" required>
+                        <label for="deviceName">Enter Device Id :</label>
+                        <input type="text" name="deviceId" id="deviceName" class="form-control" placeholder="Enter device Id" required>
                         <div>
                             <button type="button" onclick="prevStep()">Back</button>
-                            <button type="submit">Submit</button>
+                            <button type="submit" class="submit_button">Submit</button>
                         </div>
                     </div>
                 </form>    
@@ -39,7 +40,7 @@
                 <span>
                     <h1>Edit Room</h1>
                     <form action="/listings/<%= selectedRoom._id %>/edit?_method=put" method="post">
-                        <input name="roomName" id="room_name" type="text">
+                        <input name="roomName" id="room_name" type="text" value="<%= roomName %>">
                         <button type="submit" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i> Edit </button>
                     </form>
                 </span>    
@@ -77,11 +78,11 @@
             
                         <span>
                             <form action="/listings/<%= roomName %>/<%= device._id %>/<%= device.deviceType %>/<%= device.deviceName %>" method="post">
-                                <input type="hidden" name="status" value="on">
+                                <input type="hidden" name="status" value="1">
                                 <button type="submit" class="button-on">ON</button>
                             </form>
                             <form action="/listings/<%= roomName %>/<%= device._id %>/<%= device.deviceType %>/<%= device.deviceName %>" method="post">
-                                <input type="hidden" name="status" value="off">
+                                <input type="hidden" name="status" value="0">
                                 <button type="submit" class="button-off">OFF</button>
                             </form>
                         </span>

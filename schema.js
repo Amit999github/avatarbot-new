@@ -43,6 +43,15 @@ module.exports.deviceJoiSchema = myCustomJoi.object({
             'string.min': 'Device name must be at least 3 characters long',
             'string.max': 'Device name must be at most 10 characters long'
         }),
+    deviceId: myCustomJoi.string()
+    .min(2)
+    .max(10)
+    .messages({
+        'string.empty': 'Device Id is required',
+        'string.min': 'Device Id must be at least 3 characters long',
+        'string.max': 'Device Id must be at most 10 characters long'
+    }),
+
     selectedType : myCustomJoi.string().allow("", null),
 })
 
