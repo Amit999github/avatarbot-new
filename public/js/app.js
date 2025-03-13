@@ -59,16 +59,23 @@ window.addEventListener('resize', () => {
 
 // ---------------------------------------- theme toggle -------------------------------------
 const toggler = document.getElementById('theme-toggle');
-const isNightMode = localStorage.getItem('dark') === 'true';
-if (isNightMode) {
+const themeIcon = document.getElementById('theme-icon');
+
+// Apply saved theme preference
+if (localStorage.getItem('dark') === 'true') {
     document.body.classList.add('dark');
+    toggler.checked = true;
+    themeIcon.className = 'fas fa-sun'; // Sun icon for dark mode
+} else {
+    themeIcon.className = 'fas fa-moon'; // Moon icon for light mode
 }
 
-toggler.addEventListener('click', () => {
+// Toggle theme and save preference
+toggler.addEventListener('change', () => {
     document.body.classList.toggle('dark');
-    // Save night mode state to local storage
-    const isNightModeNow = document.body.classList.contains('dark');
-    localStorage.setItem('dark', isNightModeNow);
+    const isDarkMode = document.body.classList.contains('dark');
+    localStorage.setItem('dark', isDarkMode);
+    themeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
 });
 // ----------------------------------------cards dots btn -------------------------------------
 

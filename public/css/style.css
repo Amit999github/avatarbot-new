@@ -299,30 +299,28 @@ body{
     border-radius: 50%;
 }
 
-.content nav .theme-toggle{
-    display: block;
+.content nav .theme-toggle {
+    display: flex;
+    align-items: center;
     min-width: 50px;
     height: 25px;
     background: var(--grey);
     cursor: pointer;
     position: relative;
     border-radius: 25px;
+    padding: 0 5px;
 }
 
-.content nav .theme-toggle::before{
-    content: "";
+.content nav .theme-toggle i {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    bottom: 2px;
-    width: calc(25px - 4px);
-    background: var(--primary);
-    border-radius: 50%;
-    transition: all 0.3s ease;
+    font-size: 20px;
+    color: var(--dark);
+    transition: transform 0.3s ease;
 }
 
-.content nav #theme-toggle:checked+.theme-toggle::before{
-    left: calc(100% - (25px - 4px) - 2px);
+.content nav #theme-toggle:checked + .theme-toggle i {
+    color: var(--warning);
+    transform: translateX(20px) rotate(180deg);
 }
 
 .content main{
