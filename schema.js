@@ -53,6 +53,7 @@ module.exports.deviceJoiSchema = myCustomJoi.object({
     }),
 
     selectedType : myCustomJoi.string().allow("", null),
+    _csrf: myCustomJoi.string().optional(),
 })
 
 module.exports.roomJoiSchema = myCustomJoi.object({
@@ -68,4 +69,5 @@ module.exports.roomJoiSchema = myCustomJoi.object({
 
     userId: myCustomJoi.string()
         .allow("", null),
+    _csrf: myCustomJoi.string().optional(),
 });

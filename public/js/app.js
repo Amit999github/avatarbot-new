@@ -88,6 +88,7 @@ room_Add.addEventListener('click',()=>{
 })
 
 // ------------------------ room form close btn script --------------------------------
+document.getElementById("nextStep").addEventListener("click", nextStep);
 function nextStep() {
     let selectedType = document.getElementById("deviceType").value;
     if (!selectedType) {

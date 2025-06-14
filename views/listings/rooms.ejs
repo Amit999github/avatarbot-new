@@ -12,19 +12,19 @@
                 <form id="multiStepForm" class="multiStepForm needs-validation" action="/listings/<%= roomName %>/create" method="post" novalidate >
                     <h1>Add Devices</h1>
                     <div id="step1">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <select class="glow-input form-control" name="deviceType" id="deviceType" required>
                             <option value="">-- Select --</option>
                             <option name="deviceType" value="on_off_switch">On-Off Switch</option>
                             <option name="deviceType" value="fan_switch">Fan Switch</option>
                             <option name="deviceType" value="others">Others</option>
                         </select>
-                        <button type="button" onclick="nextStep()">Next</button>
+                        <button type="button" id="nextStep">Next</button>
                     </div>
                 
                     <!-- Step 2: Enter Name -->
                     <div id="step2" style="display: none;">
                         <input type="hidden" name="selectedType" id="selectedType">
-                        
                         <label for="deviceName">Enter Name:</label>
                         <input type="text" name="deviceName" id="deviceName" class="form-control" placeholder="Enter name" required>
                         <label for="deviceName">Enter Device Id :</label>
@@ -40,11 +40,13 @@
                 <span>
                     <h1>Edit Room</h1>
                     <form action="/listings/<%= selectedRoom._id %>/edit?_method=put" method="post">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <input name="roomName" id="room_name" type="text" value="<%= roomName %>">
                         <button type="submit" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i> Edit </button>
                     </form>
                 </span>    
                 <form action="/listings/<%= selectedRoom._id %>/delete?_method=DELETE" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="delete-btn" > <i class="fa-solid fa-trash"></i> Delete</button>
                 </form>
             </div>
@@ -68,20 +70,24 @@
                         </span>
                         <div class="menu add_room_form" id="menu-<%= device._id %>">
                             <form action="/listings/<%= roomName %>/<%= selectedRoom._id %>/buttons/<%= device._id %>/edit?_method=PUT" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <input type="text" name="deviceName" value="<%= device.deviceName %>">
                                 <button type="submit" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i> Save</button>
                             </form>
                             <form action="/listings/<%= roomName %>/<%= selectedRoom._id %>/buttons/<%= device._id %>/delete?_method=DELETE" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <button type="submit" class="delete-btn"> <i class="fa-solid fa-trash"></i> delete</button>
                             </form>
                         </div>
             
                         <span>
                             <form action="/listings/<%= roomName %>/<%= device._id %>/<%= device.deviceType %>/<%= device.deviceName %>" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <input type="hidden" name="status" value="1">
                                 <button type="submit" class="button-on">ON</button>
                             </form>
                             <form action="/listings/<%= roomName %>/<%= device._id %>/<%= device.deviceType %>/<%= device.deviceName %>" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <input type="hidden" name="status" value="0">
                                 <button type="submit" class="button-off">OFF</button>
                             </form>
@@ -106,6 +112,7 @@
     <main class="add_room_form" id="add_room_form">
         <h1>Creat Room</h1>
         <form action="/listings/add-credentials" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input type="text" required name="room_name" placeholder="Enter Room Name">
             <button type="submit">Create</button>
         </form>

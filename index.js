@@ -1,16 +1,20 @@
 require('dotenv').config()
 const express = require("express");
+const session = require("express-session");
 const http = require('http');
 const WebSocket = require('ws');
+const lusca = require('lusca');
 const app = express();
-const PORT = 3000;
+const helmet = require("helmet");
+const xss = require('xss-clean');
+const rateLimit = require("express-rate-limit");
+const PORT = process.env.PORT || 3000;
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const engine = require("ejs-mate");
 const flash = require("connect-flash");
-const session = require("express-session");
 const ExpressError = require("./utils/ExpressError");
 const wrapAsync = require("./utils/wrapAsync.js")
 const {isLoggedIn} = require("./middleware.js");
@@ -26,14 +30,60 @@ const sessionOptions = {
   cookie :{
       expires : Date.now() + 7 * 24 * 60 * 60 * 1000,
       maxAge : 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       httpOnly: true
   },
 };
 
+// Force HTTPS Redirect
+app.use((req, res, next) => {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
+  next();
+});
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "https://cdn.jsdelivr.net",
+        "https://cdnjs.cloudflare.com",
+        "https://unpkg.com",
+      ],
+      styleSrc: [
+        "'self'",
+        "https://cdn.jsdelivr.net",
+        "https://cdnjs.cloudflare.com",
+        "https://unpkg.com",
+        "https://fonts.googleapis.com",
+        "'unsafe-inline'"  // Required by some libraries like Bootstrap
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdn.jsdelivr.net",
+        "https://cdnjs.cloudflare.com",
+        "https://unpkg.com",
+        "data:"
+      ],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'", "ws:", "wss:"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"]
+    },
+  })
+);  
+app.use(xss());
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -49,7 +99,21 @@ app.use(express.static(path.join(__dirname,"public")));
 app.set("views",path.join(__dirname,"/views"));
 app.use("/images", express.static("images"));
 
+// Apply CSRF protection via Lusca
+app.use(lusca({
+  csrf: true,
+  xframe: 'SAMEORIGIN',
+  xssProtection: true
+}));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100
+});
+app.use(limiter);
+
 app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.cookies.user;

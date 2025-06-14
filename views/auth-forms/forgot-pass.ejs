@@ -34,6 +34,7 @@
             <ul class="inp_container">
               <h1>Reset Password</h1>
               <li>
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                   <label class="inp_label" for="input-email"><i class="fa-solid fa-user"></i>&nbsp;Email</label>
                   <input type="email" name="email" placeholder="enter your Email" class="form-control"  id="input-email" required>    
               </li>

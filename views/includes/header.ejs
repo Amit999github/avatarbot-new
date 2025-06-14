@@ -14,7 +14,7 @@
         <li>
             <a class="logout">
                 <form action="/auth/signout" method="POST">
-                
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit"><i class='bx bx-log-out-circle'></i>Sign Out</button>
                 </form>                  
             </a>
@@ -40,6 +40,6 @@
             <span class="count">12</span>
         </a>
         <a href="#" class="profile">
-            <img src="/images/img/sub_logo.png">
+            <img src="/images/sub_logo.png">    
         </a>
     </nav>
