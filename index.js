@@ -64,6 +64,7 @@ app.use(
 
 app.use((req, res, next) => {
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("X-Content-Type-Options", "nosniff");
   next();
 });
 
