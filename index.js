@@ -50,6 +50,24 @@ app.use((req, res, next) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+app.use(helmet.hsts({
+  maxAge: 63072000, // 2 years
+  includeSubDomains: true,
+  preload: true
+}));
+
+app.use(
+  helmet.referrerPolicy({ 
+    policy: "no-referrer"
+  })
+);
+
+app.use((req, res, next) => {
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  next();
+});
+
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
