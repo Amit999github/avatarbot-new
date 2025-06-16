@@ -32,6 +32,11 @@ const wss = new WebSocket.Server({ server });
 const PORT = process.env.PORT || 3000;
 
 
+// ===================== Before all middleware =====================
+app.set('trust proxy', 1); // ✅ Needed for HTTPS cookies on Render
+
+
+
 // ======================= HTTPS Redirect (Production Only) =======================
 app.use((req, res, next) => {
   if (
