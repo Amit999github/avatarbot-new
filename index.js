@@ -154,11 +154,11 @@ app.use(limiter);
 
 // ======================= Globals to All Views =======================
 app.use((req, res, next) => {
-  try {
-    res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null;
-  } catch (err) {
-    res.locals.csrfToken = null;
-  }
+  // try {
+  //   res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null;
+  // } catch (err) {
+  //   res.locals.csrfToken = null;
+  // }
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.cookies.user;
