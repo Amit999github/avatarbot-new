@@ -78,6 +78,7 @@ app.use(
         "https://cdn.jsdelivr.net",
         "https://cdnjs.cloudflare.com",
         "https://unpkg.com",
+        "https://use.fontawesome.com",
       ],
       styleSrc: [
         "'self'",
@@ -85,6 +86,7 @@ app.use(
         "https://cdnjs.cloudflare.com",
         "https://unpkg.com",
         "https://fonts.googleapis.com",
+        "https://use.fontawesome.com",
         "'unsafe-inline'"  // Required by some libraries like Bootstrap
       ],
       fontSrc: [
@@ -93,6 +95,7 @@ app.use(
         "https://cdn.jsdelivr.net",
         "https://cdnjs.cloudflare.com",
         "https://unpkg.com",
+        "https://use.fontawesome.com",
         "data:"
       ],
       imgSrc: ["'self'", "data:"],
