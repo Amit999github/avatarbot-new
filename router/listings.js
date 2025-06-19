@@ -4,10 +4,11 @@ const ExpressError = require("../utils/ExpressError.js");
 const wrapAsync = require("../utils/wrapAsync.js")
 const {isLoggedIn} = require("../middleware.js");
 const {validateroomListings} = require("../middleware/roomValidation.js");
-const {addRoomListings, editRoomListings ,deleteRoomListings, multiroom ,} = require("../controller/listings.js");
-
+const {addRoomListings, editRoomListings ,deleteRoomListings, multiroom ,renderRoomPage} = require("../controller/listings.js");
 
 // ============================== Room create route ==========================
+router.get('/add-credentials',isLoggedIn,renderRoomPage)
+
 router.post('/add-credentials',isLoggedIn,validateroomListings, addRoomListings);
 
 // =============================== Room Edit route ==========================

@@ -37,16 +37,16 @@ app.set('trust proxy', 1); // ✅ Needed for HTTPS cookies on Render
 
 
 
-// ======================= HTTPS Redirect (Production Only) =======================
-app.use((req, res, next) => {
-  if (
-    process.env.NODE_ENV === 'production' &&
-    req.headers['x-forwarded-proto'] !== 'https'
-  ) {
-    return res.redirect('https://' + req.headers.host + req.url);
-  }
-  next();
-});
+// // ======================= HTTPS Redirect (Production Only) =======================
+// app.use((req, res, next) => {
+//   if (
+//     process.env.NODE_ENV === 'production' &&
+//     req.headers['x-forwarded-proto'] !== 'https'
+//   ) {
+//     return res.redirect('https://' + req.headers.host + req.url);
+//   }
+//   next();
+// });
 
 //  ======================= Helmet & Security Headers =======================
 app.use(helmet());
@@ -145,6 +145,7 @@ app.use(lusca({
   xssProtection: true
 }));
 
+app.use(lusca.csrf());
 // ======================= Rate Limiter =======================
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -155,9 +156,9 @@ app.use(limiter);
 // ======================= Globals to All Views =======================
 app.use((req, res, next) => {
   // try {
-  //   res.locals.csrfToken = req.csrfToken ? req.csrfToken() : null;
+  //   res.locals._csrf = req._csrf ? req.csrfToken() : null;
   // } catch (err) {
-  //   res.locals.csrfToken = null;
+  //   res.locals._csrf = null;
   // }
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");

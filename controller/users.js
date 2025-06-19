@@ -39,6 +39,7 @@ module.exports.renderSigninForm = (req, res) => res.render('auth-forms/login.ejs
 //  =================================== login route =====================
 module.exports.signin = wrapAsync(async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body)
 
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;

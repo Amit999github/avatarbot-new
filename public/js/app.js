@@ -79,13 +79,13 @@ toggler.addEventListener('change', () => {
 });
 // ----------------------------------------cards dots btn -------------------------------------
 
-// ------------------------------------ Room creat scripts ---------------------------------
-const room_Add = document.querySelector('.add-room');
-const dash_main = document.getElementById('dash-main');
-room_Add.addEventListener('click',()=>{
-  dash_main.classList.toggle('add_room_form');
-  document.getElementById('add_room_form').classList.toggle('dot-open');
-})
+// // ------------------------------------ Room creat scripts ---------------------------------
+// const room_Add = document.querySelector('.add-room');
+// const dash_main = document.getElementById('dash-main');
+// room_Add.addEventListener('click',()=>{
+//   dash_main.classList.toggle('add_room_form');
+//   document.getElementById('add_room_form').classList.toggle('dot-open');
+// })
 
 // ------------------------ room form close btn script --------------------------------
 document.getElementById("nextStep").addEventListener("click", nextStep);

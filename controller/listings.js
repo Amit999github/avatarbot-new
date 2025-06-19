@@ -10,6 +10,7 @@ const {auth ,db} = require('../firebaseConfig');
 // ============================================= add room listings ==============================
 const addRoomListings = wrapAsync(async (req, res) => {
     let userId = req.cookies.user;
+    console.log(req.body)
     let user = await userDetails.findOne({ uid: userId });
 
     let roomExists = await Room.exists({ userId, roomName: req.body.room_name });
@@ -85,6 +86,19 @@ const multiroom = wrapAsync(async (req, res) => {
     res.render('listings/rooms', { rooms, selectedRoom, roomName, devices: allDevices });
 });
 
+const renderRoomPage = wrapAsync(async (req, res) => {
+    let userId = req.cookies.user;
+
+    // Fetch rooms for the logged-in user
+    let rooms = await Room.find({ userId });
+
+    // Find the specific room by name
+
+
+    res.render('listings/addRoom', { rooms,});
+});
+
+
   
 
-module.exports = { addRoomListings ,editRoomListings,deleteRoomListings, dashboardListings , multiroom ,};
+module.exports = { addRoomListings ,editRoomListings,deleteRoomListings, dashboardListings , multiroom ,renderRoomPage};

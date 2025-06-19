@@ -815,7 +815,7 @@ body{
     border-radius: 8px;
     box-shadow: 0 4px 8px var(--light);
     text-align: center;
-    display: none;
+    /* display: none; */
     transition: filter 0.3s ease;
 }
 
