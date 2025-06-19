@@ -145,7 +145,7 @@ app.use(lusca({
   xssProtection: true
 }));
 
-app.use(lusca.csrf());
+// app.use(lusca.csrf());
 // ======================= Rate Limiter =======================
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

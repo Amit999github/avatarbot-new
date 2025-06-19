@@ -815,11 +815,11 @@ body{
     border-radius: 8px;
     box-shadow: 0 4px 8px var(--light);
     text-align: center;
-    /* display: none; */
     transition: filter 0.3s ease;
 }
 
 .add_type_form {
+    display: none;
     flex-wrap: wrap;
     justify-content: space-around ;
     padding: 36px 0;
