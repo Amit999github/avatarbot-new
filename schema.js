@@ -57,14 +57,14 @@ module.exports.deviceJoiSchema = myCustomJoi.object({
 })
 
 module.exports.roomJoiSchema = myCustomJoi.object({
-    room_name: myCustomJoi.string()
+    room_name: myCustomJoi.string().trim()
         .min(2)
-        .max(18)
+        .max(50)
         .required()
         .messages({
             'string.empty': 'Room name is required',
             'string.min': 'Room name must be at least 2 characters long',
-            'string.max': 'Room name must be at most 18 characters long'
+            'string.max': 'Room name must be at most 50 characters long'
         }),
 
     userId: myCustomJoi.string()
