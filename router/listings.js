@@ -5,11 +5,11 @@ const wrapAsync = require("../utils/wrapAsync.js")
 const {isLoggedIn} = require("../middleware.js");
 const {validateroomListings} = require("../middleware/roomValidation.js");
 const {addRoomListings, editRoomListings ,deleteRoomListings, multiroom ,renderRoomPage} = require("../controller/listings.js");
-
+const {roomListingSanitize} = require("../sanitize_Input/listings.js");
 // ============================== Room create route ==========================
 router.get('/add-credentials',isLoggedIn,renderRoomPage)
 
-router.post('/add-credentials',isLoggedIn,validateroomListings, addRoomListings);
+router.post('/add-credentials',isLoggedIn,roomListingSanitize,validateroomListings, addRoomListings);
 
 // =============================== Room Edit route ==========================
 router.put('/:id/edit',isLoggedIn, editRoomListings);
