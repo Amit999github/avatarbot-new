@@ -5,11 +5,12 @@ const wrapAsync = require("../utils/wrapAsync.js")
 const {isLoggedIn} = require("../middleware.js");
 const { validatedeviceListings} = require("../middleware/deviceMiddleware.js");
 const {deviceListings, buttonListings, buttonEditListings, buttonRemoveListing} = require("../controller/deviceListing.js");
+const {ListingSanitize} = require("../sanitize_Input/listings.js");
 
 // ================================ device listings ==========================
-router.post('/create',isLoggedIn,validatedeviceListings, deviceListings);
+router.post('/create',isLoggedIn,ListingSanitize,validatedeviceListings, deviceListings);
 
-router.put('/:_id/buttons/:deviceId/edit', isLoggedIn, buttonEditListings);
+router.put('/:_id/buttons/:deviceId/edit', isLoggedIn,ListingSanitize, buttonEditListings);
 
 // ============================== device route ==========================
 router.delete('/:_id/buttons/:deviceId/delete',isLoggedIn,buttonRemoveListing);

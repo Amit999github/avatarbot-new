@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html');
 
 
-const roomListingSanitize = (req , res, next) => {
+const ListingSanitize = (req , res, next) => {
    for (let key in req.body) {
     if (typeof req.body[key] === 'string') {
       req.body[key] = sanitizeHtml(req.body[key], {
@@ -17,4 +17,4 @@ const roomListingSanitize = (req , res, next) => {
 }
 
 
-module.exports = {roomListingSanitize};
+module.exports = {ListingSanitize};
