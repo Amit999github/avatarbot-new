@@ -7,7 +7,7 @@ const roomSchema = new Schema({
         type: String, 
         required: true ,
         minlength : 2,
-        maxlength : 18
+        maxlength : 50
     },
     userId: { 
         type: String, 
