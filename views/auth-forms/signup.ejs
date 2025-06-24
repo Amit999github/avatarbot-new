@@ -64,14 +64,14 @@
                         <label class="inp_label" for="input-password"><i class="fa-solid fa-lock"></i> &nbsp;Password</label>
                         <div class="input pass_cont">
                           <input type="password" placeholder="Enter Password" name="password" class="form-control" id="input-password" required>
-                          <i class="fa-solid fa-eye eye" onclick="togglePasswordVisibility('input-password', this)"></i>  
+                          <i class="fa-solid fa-eye eye" id="pass-eye"></i>  
                         </div>
                       </li>
                       <li>
                         <label class="inp_label" for="con-password"><i class="fa-solid fa-lock"></i> &nbsp;Confirm Password</label>
                         <div class="input pass_cont">
                           <input type="password" placeholder="Confirm your password" name="con_password" class="form-control" id="con-password"  required>
-                          <i class="fa-solid fa-eye eye" onclick="togglePasswordVisibility('con-password', this)"></i>  
+                          <i class="fa-solid fa-eye eye" id="pass-con-eye"></i>  
                         </div>
                       </li>
                     </div>
@@ -84,19 +84,7 @@
           </div>
         </div>  
     </section>
-    <script>
-      function togglePasswordVisibility(inputId, icon) {
-        const passwordField = document.getElementById(inputId);
-        const isPasswordVisible = passwordField.type === 'text';
-    
-        // Toggle input type between password and text
-        passwordField.type = isPasswordVisible ? 'password' : 'text';
-    
-        // Update the icon class
-        icon.classList.toggle('fa-eye', isPasswordVisible);
-        icon.classList.toggle('fa-eye-slash', !isPasswordVisible);
-      }
-    </script>
+    <script src="/js/toggle.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/otp_req.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
