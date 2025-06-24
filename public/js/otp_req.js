@@ -1,6 +1,7 @@
 
 const otpBtn = document.querySelector('.otp_button');
 const emailInput = document.getElementById('input-email');
+const _csrf = document.getElementById('_csrf').value;   
 
 if (!otpBtn || !emailInput) {
     console.error("OTP button or email input not found!");
@@ -68,7 +69,11 @@ if (!otpBtn || !emailInput) {
         const email = emailInput.value.trim();
         if (!email) return; // Extra safety check
 
-        axios.post(`/auth/send-mail`, { email })
+        axios.post(`/auth/send-mail`, { email }, {
+            Headers : {
+                _csrf : _csrf
+            }
+        })
             .then(response => 
                 alert(response.data))
             .catch(error => alert(`Error: ${error.response?.data || error.message}`));
