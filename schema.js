@@ -8,7 +8,7 @@ const myCustomJoi = joi.extend(require('joi-phone-number'));
             'string.max': 'Name must be at most 50 characters long'
         }),
         mobile_no : myCustomJoi.string().phoneNumber({ defaultCountry: 'IN', format: 'e164' }).required(),
-        email : myCustomJoi.string().email().lowercase().required(),
+        email : myCustomJoi.string().email().required(),
         password : myCustomJoi.string().min(6).max(32).required().messages({
             'string.min': 'Password must be at least 6 characters long',
             'string.empty': 'Password is required'

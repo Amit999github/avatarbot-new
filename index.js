@@ -145,7 +145,8 @@ app.use(lusca({
   xssProtection: true
 }));
 
- // ======================= Rate Limiter =======================
+// app.use(lusca.csrf());
+// ======================= Rate Limiter =======================
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100
@@ -154,6 +155,11 @@ app.use(limiter);
 
 // ======================= Globals to All Views =======================
 app.use((req, res, next) => {
+  // try {
+  //   res.locals._csrf = req._csrf ? req.csrfToken() : null;
+  // } catch (err) {
+  //   res.locals._csrf = null;
+  // }
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.cookies.user;
