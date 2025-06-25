@@ -70,7 +70,7 @@ if (!otpBtn || !emailInput) {
         if (!email) return; // Extra safety check
 
         axios.post(`/auth/send-mail`, { email } ,{
-            headers: { 'csrf-token': csrfToken }
+            headers: { 'X-CSRF-Token': csrfToken }
         })
             .then(response => 
                 alert(response.data))
