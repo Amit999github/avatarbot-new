@@ -97,14 +97,13 @@ module.exports.resetCredential = wrapAsync(async (req, res) => {
   res.redirect("/auth/signin");
 });
 //  =================================== logout ==================================
-module.exports.signout = async (req, res) => {
+module.exports.signout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.log("Logout error:", err);
       return res.redirect("/dashboard");
     }
     res.clearCookie("connect.sid"); // default session cookie name
-    req.flash("success", "Logged out successfully");
     res.redirect("/auth/signin");
   });
 };
