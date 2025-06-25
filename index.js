@@ -162,7 +162,7 @@ app.use((req, res, next) => {
   // }
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currUser = req.session.user.uid;
+  res.locals.currUser = req.session.user?.uid || null;
   next();
 });
 
