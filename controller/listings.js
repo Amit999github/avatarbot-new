@@ -9,7 +9,7 @@ const {auth ,db} = require('../firebaseConfig');
 
 // ============================================= add room listings ==============================
 const addRoomListings = wrapAsync(async (req, res) => {
-    let userId = req.cookies.user;
+    let userId = req.session.user.uid;
     console.log(req.body)
     let user = await userDetails.findOne({ uid: userId });
 
@@ -36,7 +36,7 @@ const editRoomListings = wrapAsync(async (req, res) => {
 })
 // ================================= delete room listings ==============================
 const deleteRoomListings = wrapAsync(async (req, res) => {
-    let uid = req.cookies.user;
+    let uid = req.session.user.uid;
     let { id } = req.params;
     await userDetails.findOneAndUpdate({ uid }, { $pull: { rooms: id } });
     await Room.findByIdAndDelete(id);
@@ -49,7 +49,7 @@ const dashboardListings = wrapAsync( async (req, res,wss) => {
     wss.on('connection', async (ws) => {
         console.log('New WebSocket connection');
     
-        const userRef = db.ref(`users/${req.cookies.user}`);
+        const userRef = db.ref(`users/${req.session.user.uid}`);
         userRef.on('value', (snapshot) => {
             const data = snapshot.val();
             ws.send(JSON.stringify({data:data}));
@@ -59,7 +59,7 @@ const dashboardListings = wrapAsync( async (req, res,wss) => {
             console.log('WebSocket connection closed');
         });
     });
-    let rooms = await Room.find({userId:req.cookies.user});
+    let rooms = await Room.find({userId:req.session.user.uid});
     res.render('listings/dashboard',{rooms});    
 })
 
@@ -67,7 +67,7 @@ const dashboardListings = wrapAsync( async (req, res,wss) => {
 // ================================== multi room===============================
 const multiroom = wrapAsync(async (req, res) => {
     let { roomName } = req.params;
-    let userId = req.cookies.user;
+    let userId = req.session.user.uid;
 
     // Fetch rooms for the logged-in user
     let rooms = await Room.find({ userId });
@@ -87,7 +87,7 @@ const multiroom = wrapAsync(async (req, res) => {
 });
 
 const renderRoomPage = wrapAsync(async (req, res) => {
-    let userId = req.cookies.user;
+    let userId = req.session.user.uid;
 
     // Fetch rooms for the logged-in user
     let rooms = await Room.find({ userId });

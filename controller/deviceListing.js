@@ -37,10 +37,10 @@ const buttonListings = wrapAsync(async (req, res) => {
 
     let room = rooms.map(r => r._id.toString().slice(-5));
     const id = _id.toString().slice(-5);
-    const Uid = req.cookies.user.toString().slice(-5);
+    const Uid = req.session.user.uid.toString().slice(-5);
     const status = req.body.status;
 
-    await db.ref(`users/${req.cookies.user}/StringIn`).set(`$${Uid},${room},${id},${deviceType},${deviceName},${status}%`);
+    await db.ref(`users/${req.session.user.uid}/StringIn`).set(`$${Uid},${room},${id},${deviceType},${deviceName},${status}%`);
 
     req.flash('success', 'Request sent successfully');
     res.redirect(`/listings/${roomName}`);
