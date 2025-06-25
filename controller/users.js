@@ -98,7 +98,6 @@ module.exports.resetCredential = wrapAsync(async (req, res) => {
 });
 //  =================================== logout ==================================
 module.exports.signout = async (req, res) => {
-  await signOut(auth);
   req.session.destroy((err) => {
     if (err) {
       console.log("Logout error:", err);
