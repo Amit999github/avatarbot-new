@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signup</title>
+  <title>Error</title>
       <!-- -------------------------Google Font CDN --------------------------------------- -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,9 +24,9 @@
             <div class="logo">
               <img src="/images/Avatarbot_logo.jpg" alt="Avatarbot_Png">
             </div>
-            <div class="row col-6 mt-3 offset-3">
+            <div class="row col-3 mt-3 ">
                 <div class="alert alert-danger" role="alert">
-                    <p class="alear alert-heading"><%=err.statusCode%>,<%= err.message %></p>
+                    <p class="alear alert-heading"><%= err.status %>,<%= err.message %></p>
                 </div>
             </div>
           </div>

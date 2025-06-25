@@ -7,6 +7,7 @@ const WebSocket = require('ws');
 const helmet = require("helmet");
 const xss = require('xss-clean');
 const lusca = require('lusca');
+const mongoSanitize = require('mongo-sanitize');
 const rateLimit = require("express-rate-limit");
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -113,6 +114,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(methodOverride('_method'));
 
+// ======================== Mongo Sanitization ================================
+app.use((req, res, next) => {
+  req.body = mongoSanitize(req.body);
+  req.params = mongoSanitize(req.params);
+  req.query = mongoSanitize(req.query);
+  next();
+});
 // ======================= Session and Flash =======================
 const sessionOptions = {
   secret : process.env.SECRET,

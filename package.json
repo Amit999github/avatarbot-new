@@ -26,6 +26,7 @@
     "joi-phone-number": "^5.1.1",
     "lusca": "^1.7.0",
     "method-override": "^3.0.0",
+    "mongo-sanitize": "^1.1.0",
     "mongoose": "^8.9.2",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.10",
