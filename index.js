@@ -144,6 +144,7 @@ const store = MongoStore.create({
     secret: process.env.SECRET,
   },
   touchAfter: 24 * 3600,
+  autoRemove: 'native',
 });
 
 const sessionOptions = {
