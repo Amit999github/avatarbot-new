@@ -15,6 +15,7 @@ const methodOverride = require("method-override");
 const engine = require("ejs-mate");
 const flash = require("connect-flash");
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo');
 const path = require("path");
 
 // ======================= Utility & Custom Modules =======================
@@ -121,8 +122,32 @@ app.use((req, res, next) => {
   req.query = mongoSanitize(req.query);
   next();
 });
+
+// ==================================== mongoDB connection ===================================
+const dburl = process.env.ATLASDB_URL;
+
+
+async function main() {
+  await mongoose.connect(dburl);
+}
+
+main()
+.then(res =>{
+    console.log('database connected successfully');
+}).catch(err => console.log(err));
+
 // ======================= Session and Flash =======================
+
+const store = MongoStore.create({
+  mongoUrl:dburl,
+  crypto :{
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
 const sessionOptions = {
+  store,
   secret : process.env.SECRET,
   resave : false,
   saveUninitialized : true,
@@ -140,7 +165,6 @@ app.use(flash());
 
 // ======================= View Engine & Static =======================
 app.engine('ejs', engine);
-app.use(flash());
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname,"public")));
 app.set("views",path.join(__dirname,"/views"));
@@ -153,7 +177,6 @@ app.use(lusca({
   xssProtection: true
 }));
 
-// app.use(lusca.csrf());
 // ======================= Rate Limiter =======================
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -163,29 +186,12 @@ app.use(limiter);
 
 // ======================= Globals to All Views =======================
 app.use((req, res, next) => {
-  // try {
-  //   res.locals._csrf = req._csrf ? req.csrfToken() : null;
-  // } catch (err) {
-  //   res.locals._csrf = null;
-  // }
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.session.user?.uid || null;
   next();
 });
 
-// ==================================== mongoDB connection ===================================
-const dburl = process.env.ATLASDB_URL;
-
-
-async function main() {
-  await mongoose.connect(dburl);
-}
-
-main()
-.then(res =>{
-    console.log('database connected successfully');
-}).catch(err => console.log(err));
 
 // ======================= Routes =======================
 app.get('/', (req, res) => {
