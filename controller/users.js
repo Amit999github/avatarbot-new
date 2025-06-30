@@ -1,26 +1,21 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
-} = require("firebase/auth");
-const { auth, db } = require("../firebaseConfig");
-const userDetails = require("../models/user.js");
-const wrapAsync = require("../utils/wrapAsync.js");
+} = require('firebase/auth');
+const { auth, db } = require('../firebaseConfig');
+const userDetails = require('../models/user.js');
+const wrapAsync = require('../utils/wrapAsync.js');
 
-module.exports.renderSignupForm = (req, res) =>
-  res.render("auth-forms/signup.ejs");
+module.exports.renderSignupForm = (req, res) => res.render('auth-forms/signup.ejs');
 
 // =========================================== create users ============================
 module.exports.signup = wrapAsync(async (req, res) => {
   const { name, mobile_no, email, password, con_password } = req.body;
 
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
 
   // Save user details in Firebase Realtime Database
@@ -29,15 +24,15 @@ module.exports.signup = wrapAsync(async (req, res) => {
     email: user.email,
     uid: user.uid,
     mobile: mobile_no,
-    StringIn: "#$$%%$",
-    StringOut: "#$$%%$",
+    StringIn: '#$$%%$',
+    StringOut: '#$$%%$',
     dashboard: [
       {
-        Humidity: "45",
-        Temp: "43",
-        voltage: "34",
-        current: "23",
-        TotalCusm: "678",
+        Humidity: '45',
+        Temp: '43',
+        voltage: '34',
+        current: '23',
+        TotalCusm: '678',
       },
     ],
   });
@@ -56,22 +51,17 @@ module.exports.signup = wrapAsync(async (req, res) => {
     uid: user.uid,
     email: user.email,
   };
-  req.flash("success", "Welcome to Avatarbot");
-  res.redirect("/dashboard");
+  req.flash('success', 'Welcome to Avatarbot');
+  res.redirect('/dashboard');
 });
 
-module.exports.renderSigninForm = (req, res) =>
-  res.render("auth-forms/login.ejs");
+module.exports.renderSigninForm = (req, res) => res.render('auth-forms/login.ejs');
 
 //  =================================== login route =====================
 module.exports.signin = wrapAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  const userCredential = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
 
   // ✅ Store UID or other info in session
@@ -79,30 +69,29 @@ module.exports.signin = wrapAsync(async (req, res) => {
     uid: user.uid,
     email: user.email,
   };
-  req.flash("success", "Login successfully");
-  res.redirect("/dashboard");
+  req.flash('success', 'Login successfully');
+  res.redirect('/dashboard');
 });
 
 // ============================== reset password ==============================
 
-module.exports.renderResetCredentialForm = (req, res) =>
-  res.render("auth-forms/forgot-pass.ejs");
+module.exports.renderResetCredentialForm = (req, res) => res.render('auth-forms/forgot-pass.ejs');
 
 module.exports.resetCredential = wrapAsync(async (req, res) => {
   const { email } = req.body;
   await sendPasswordResetEmail(auth, email);
 
-  req.flash("success", "Password reset email sent successfully.");
-  res.redirect("/auth/signin");
+  req.flash('success', 'Password reset email sent successfully.');
+  res.redirect('/auth/signin');
 });
 //  =================================== logout ==================================
 module.exports.signout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      console.log("Logout error:", err);
-      return res.redirect("/dashboard");
+      console.log('Logout error:', err);
+      return res.redirect('/dashboard');
     }
-    res.clearCookie("connect.sid"); // default session cookie name
-    res.redirect("/auth/signin");
+    res.clearCookie('connect.sid'); // default session cookie name
+    res.redirect('/auth/signin');
   });
 };
