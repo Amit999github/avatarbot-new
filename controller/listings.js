@@ -43,20 +43,7 @@ const deleteRoomListings = wrapAsync(async (req, res) => {
 });
 
 // ============================================= dashboard listings ==============================
-const dashboardListings = wrapAsync(async (req, res, wss) => {
-  wss.on('connection', async (ws) => {
-    console.log('New WebSocket connection');
-
-    const userRef = db.ref(`users/${req.session.user.uid}`);
-    userRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      ws.send(JSON.stringify({ data: data }));
-    });
-
-    ws.on('close', () => {
-      console.log('WebSocket connection closed');
-    });
-  });
+const dashboardListings = wrapAsync(async (req, res) => {
   let rooms = await Room.find({ userId: req.session.user.uid });
   res.render('listings/dashboard', { rooms });
 });

@@ -29,8 +29,6 @@ const deviceRouter = require('./router/devices.js');
 
 // ======================= App Initialization =======================
 const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
 const PORT = process.env.PORT || 3000;
 
 // ===================== Before all middleware =====================
@@ -160,6 +158,7 @@ const sessionOptions = {
 };
 
 app.use(session(sessionOptions));
+const sessionParser = session(sessionOptions);
 app.use(flash());
 
 // ======================= View Engine & Static =======================
@@ -198,11 +197,7 @@ app.get('/', (req, res) => {
   res.redirect('/dashboard');
 });
 // ============================================= / route =============================
-app.get(
-  '/dashboard',
-  isLoggedIn,
-  wrapAsync(async (req, res) => dashboardListings(req, res, wss)),
-);
+app.get('/dashboard', isLoggedIn, dashboardListings);
 
 // ================================= Auth Router =================================
 app.use('/auth', userRouter);
@@ -233,6 +228,13 @@ app.use((err, req, res, next) => {
   const { statusCode = 500, message = 'something went wrong' } = err;
   res.status(statusCode).render('error/error.ejs', { err });
 });
+
+// ======================= WebSocket Setup (Bottom) =======================
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ noServer: true });
+
+require('./wsSessionUpgrade')(server, wss, sessionParser);
+require('./websocket')(wss);
 
 // ======================= Start Server =======================
 server.listen(PORT, () => {
