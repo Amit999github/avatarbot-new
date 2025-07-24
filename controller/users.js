@@ -26,15 +26,13 @@ module.exports.signup = wrapAsync(async (req, res) => {
     mobile: mobile_no,
     StringIn: '#$$%%$',
     StringOut: '#$$%%$',
-    dashboard: [
-      {
-        Humidity: '45',
-        Temp: '43',
-        voltage: '34',
-        current: '23',
-        TotalCusm: '678',
-      },
-    ],
+    dashboard: {
+      Humidity: '45',
+      Temp: '43',
+      voltage: '34',
+      current: '23',
+      TotalCusm: '678',
+    },
   });
 
   // Save user in MongoDB
