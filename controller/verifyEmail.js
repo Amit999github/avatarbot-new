@@ -1,26 +1,15 @@
-// No need to require dotenv here, already loaded globally
+require('dotenv').config();
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
-const Otp = require('../models/otp');
 const wrapAsync = require('../utils/wrapAsync');
 const ExpressError = require('../utils/ExpressError');
 
-const saltRounds = 10;
-
+const otps = {};
 module.exports.sendmail = wrapAsync(async (req, res, next) => {
   const { email } = req.body;
   if (!email) throw new ExpressError('Email is required', 400);
 
   const otp = Math.floor(100000 + Math.random() * 900000);
-  const hashedOtp = await bcrypt.hash(otp.toString(), saltRounds);
-
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min from now
-
-  await Otp.findOneAndUpdate(
-    { email },
-    { otp: hashedOtp, expiresAt },
-    { upsert: true, new: true }
-  );
+  otps[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 };
 
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -40,32 +29,26 @@ module.exports.sendmail = wrapAsync(async (req, res, next) => {
   };
 
   await transporter.sendMail(mailOptions);
-  console.log(`OTP sent`);
+  console.log(`OTP sent to ${email}: ${otp}`);
   next();
 });
 
 module.exports.verifyOtp = wrapAsync(async (req, res, next) => {
   const { email, otp } = req.body;
-  if (!email || !otp) {
-    req.flash('error', 'Email and OTP are required');
-  }
+  if (!email || !otp) req.flash('error', 'Email and OTP are required');
 
-  const otpRecord = await Otp.findOne({ email });
-  if (!otpRecord) {
-    req.flash('error', 'OTP not found for the given email');
-  }
+  const otpData = otps[email];
+  if (!otpData) req.flash('error', 'OTP not found for the given email');
 
-  if (otpRecord.expiresAt < Date.now()) {
-    await Otp.deleteOne({ email });
+  if (otpData.expiresAt < Date.now()) {
+    delete otps[email];
     req.flash('error', 'OTP has expired');
   }
 
-  const isMatch = await bcrypt.compare(otp.toString(), otpRecord.otp);
-  if (!isMatch) {
+  if (otpData.otp !== parseInt(otp, 10)) {
     req.flash('error', 'Invalid OTP');
   }
 
-  // Valid OTP — cleanup
-  await Otp.deleteOne({ email });
-  next(); // Proceed to next middleware (e.g., user registration or login)
+  delete otps[email];
+  next();
 });
