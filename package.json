@@ -10,7 +10,7 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "keywords": [],
   "author": "",
