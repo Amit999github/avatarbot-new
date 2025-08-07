@@ -3,7 +3,7 @@ const { roomJoiSchema } = require('../schema.js');
 
 // ==================================== validate Room listing ==========================
 const validateroomListings = (req, res, next) => {
-  console.log(req.body.room_name, 'room_name validation');
+  // console.log(req.body.room_name, 'room_name validation');
   let { error } = roomJoiSchema.validate(req.body);
   if (error) {
     let errMsg = error.details.map((el) => el.message).join(',');
