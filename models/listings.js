@@ -19,7 +19,14 @@ const roomSchema = new Schema({
       ref: 'Device',
     },
   ],
+  firebaseRoom: {
+    type: String,
+    required: true,
+    match: /^room\d+$/, // e.g. room1, room2, ...
+  },
 });
+
+roomSchema.index({ userId: 1, firebaseRoom: 1 }, { unique: true });
 
 roomSchema.post('findOneAndDelete', async function (doc) {
   if (doc) {
