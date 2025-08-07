@@ -8,7 +8,6 @@ const { auth, db } = require('../firebaseConfig');
 // ============================================= add room listings ==============================
 const addRoomListings = wrapAsync(async (req, res) => {
   let userId = req.session.user.uid;
-  console.log(req.body);
   let user = await userDetails.findOne({ uid: userId });
 
   let roomExists = await Room.exists({ userId, roomName: req.body.room_name });
@@ -17,27 +16,79 @@ const addRoomListings = wrapAsync(async (req, res) => {
     return res.redirect('/dashboard');
   }
 
-  let room = await Room.create({ roomName: req.body.room_name, userId });
+  const userRooms = await Room.find({ userId }).select('firebaseRoom');
+  const usedNumbers = new Set();
+  userRooms.forEach((r) => {
+    const match = r.firebaseRoom.match(/^room(\d+)$/);
+    if (match) usedNumbers.add(parseInt(match[1], 10));
+  });
+
+  let roomNumber = 1;
+  while (usedNumbers.has(roomNumber)) roomNumber++;
+  const firebaseRoom = `room${roomNumber}`;
+
+  let room = await Room.create({ roomName: req.body.room_name, userId, firebaseRoom });
   user.rooms.push(room._id);
   await user.save();
+
+  const roomRef = db.ref(`users/${userId}/${firebaseRoom}`);
+  await roomRef.set({
+    roomName: req.body.room_name,
+  });
 
   req.flash('success', 'Room created successfully');
   res.redirect(`/listings/${req.body.room_name}`);
 });
 
+// ================================= Edit room listings ==============================
 const editRoomListings = wrapAsync(async (req, res) => {
-  let { id } = req.params;
-  let { roomName } = req.body;
-  let room = await Room.findByIdAndUpdate(id, { roomName });
+  const { id } = req.params;
+  const { roomName } = req.body;
+
+  // Step 1: Update roomName in MongoDB
+  const room = await Room.findByIdAndUpdate(id, { roomName }, { new: true });
+
+  if (!room) {
+    req.flash('error', 'Room not found');
+    return res.redirect('/dashboard');
+  }
+
+  // Step 2: Get userId and firebaseRoom from updated document
+  const userId = req.session.user.uid;
+  const firebaseRoom = room.firebaseRoom;
+
+  // Step 3: Update roomName in Firebase under users/{userId}/{firebaseRoom}/roomName
+  const firebasePath = `users/${userId}/${firebaseRoom}/roomName`;
+  await db.ref(firebasePath).set(roomName);
+
   req.flash('success', 'Room updated successfully');
   res.redirect(`/listings/${roomName}`);
 });
+
 // ================================= delete room listings ==============================
 const deleteRoomListings = wrapAsync(async (req, res) => {
-  let uid = req.session.user.uid;
-  let { id } = req.params;
+  const uid = req.session.user.uid;
+  const { id } = req.params;
+
+  // Step 1: Find the Room to get firebaseRoom
+  const room = await Room.findById(id);
+  if (!room) {
+    req.flash('error', 'Room not found');
+    return res.redirect('/dashboard');
+  }
+
+  const firebaseRoom = room.firebaseRoom;
+
+  // Step 2: Remove room reference from userDetails
   await userDetails.findOneAndUpdate({ uid }, { $pull: { rooms: id } });
+
+  // Step 3: Delete room from MongoDB
   await Room.findByIdAndDelete(id);
+
+  // Step 4: Delete room from Firebase
+  const firebasePath = `users/${uid}/${firebaseRoom}`;
+  await db.ref(firebasePath).remove();
+
   req.flash('success', 'Room deleted successfully');
   res.redirect('/dashboard');
 });
